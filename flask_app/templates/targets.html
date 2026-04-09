@@ -1,0 +1,54 @@
+{% extends "app_base.html" %}
+{% block title %}Targets{% endblock %}
+{% block content %}
+<h1 class="mb-4">Targets</h1>
+<p class="text-visible mb-4">Set your financial goals (e.g. house in 5 years) and see how much you need to save each month.</p>
+<div class="row">
+  <div class="col-lg-5 mb-4">
+    <div class="card p-4">
+      <h5 class="mb-3 text-dark">Income Setup (Required)</h5>
+      <p class="text-muted small mb-3">Targets are evaluated using your monthly income. Set it once, then add targets.</p>
+      <form id="profile-form" class="mb-4">
+        <div class="mb-3">
+          <label class="form-label">Monthly Income (₹)</label>
+          <input type="number" step="1" class="form-control" id="p-income" placeholder="e.g. 50000" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Expected Monthly Expense (₹) (Optional)</label>
+          <input type="number" step="1" class="form-control" id="p-expense" placeholder="e.g. 35000">
+          <div class="text-muted small mt-1">If you don't enter this, the system estimates it from your last 3 months expenses.</div>
+        </div>
+        <button type="submit" class="btn btn-outline-primary w-100">Save Income Setup</button>
+        <div id="profile-msg" class="text-muted small mt-2"></div>
+      </form>
+
+      <hr class="my-3">
+
+      <h5 class="mb-3 text-dark">Add Target</h5>
+      <form id="target-form">
+        <div class="mb-3"><label class="form-label">Goal Name</label><input type="text" class="form-control" id="tname" required placeholder="e.g. Own House"></div>
+        <div class="mb-3"><label class="form-label">Target Amount (₹)</label><input type="number" step="1000" class="form-control" id="tamount" required placeholder="e.g. 5000000"></div>
+        <div class="mb-3"><label class="form-label">Years to Achieve</label><input type="number" step="0.5" class="form-control" id="tyears" required placeholder="e.g. 5"></div>
+        <div class="mb-3"><label class="form-label">Notes</label><input type="text" class="form-control" id="tnotes" placeholder="Optional"></div>
+        <button type="submit" class="btn btn-success w-100" id="add-target-btn">Add Target</button>
+        <div class="text-muted small mt-2" id="add-target-hint"></div>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="text-dark mb-0">Your Targets</h5>
+        <button id="clear-targets-btn" class="btn btn-sm btn-outline-danger shadow-sm px-3">
+          <i class="bi bi-trash3 me-1"></i>Clear All History
+        </button>
+      </div>
+      <div id="target-list"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+<script src="{{ url_for('static', filename='js/targets.js') }}"></script>
+{% endblock %}

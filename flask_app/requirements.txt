@@ -1,0 +1,17 @@
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+reportlab==4.0.9
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+tensorflow
+nltk
+spacy
+textblob
+requests
+beautifulsoup4
+selenium
+xgboost
+lightgbm

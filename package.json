@@ -1,0 +1,15 @@
+{
+  "name": "finance-intel-pro",
+  "version": "1.0.0",
+  "description": "Pro-Level MERN Financial Platform with AI/ML",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && node server.js\" \"cd frontend && npm run dev\"",
+    "dev": "concurrently \"cd backend && node server.js\" \"cd frontend && npm run dev\"",
+    "backend": "cd backend && node server.js",
+    "frontend": "cd frontend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

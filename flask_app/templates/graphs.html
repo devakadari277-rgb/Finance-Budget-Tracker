@@ -1,0 +1,29 @@
+{% extends "app_base.html" %}
+{% block title %}Graph Analysis{% endblock %}
+{% block content %}
+<h1 class="mb-4">Graph Analysis</h1>
+<div class="mb-4 d-flex align-items-center gap-2">
+  <label class="form-label mb-0 text-white">Year</label>
+  <select class="form-select d-inline-block w-auto text-dark" id="sel-year"></select>
+</div>
+<div id="smart-insights-container" class="mb-4" style="display:none;">
+    <div class="card border-0 shadow-lg" style="background: #ffffff; border: 1px solid rgba(14, 165, 233, 0.3) !important;">
+        <div class="card-body">
+            <h6 class="text-dark d-flex align-items-center mb-3"><i class="bi bi-stars me-2 text-warning"></i>Smart Financial Insights</h6>
+            <div id="smart-insights-list" class="row g-3 text-dark">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-6"><div class="card"><div class="card-body"><h6>Pie Chart - Expense by Category</h6><div id="chart-pie"></div><p class="text-muted small mt-2">Provides a visual breakdown of your spending across different categories. Use this to identify where most of your money goes each month.</p></div></div></div>
+  <div class="col-lg-6"><div class="card"><div class="card-body"><h6>Bar Chart - Income vs Expense</h6><div id="chart-bar"></div><p class="text-muted small mt-2">Compares your total monthly income against your total monthly expenses. A higher income bar indicates a positive financial month.</p></div></div></div>
+  <div class="col-12"><div class="card"><div class="card-body"><h6>Line Chart - Trend Analysis</h6><div id="chart-line"></div><p class="text-muted small mt-2">Visualizes the trajectory of your income, expenses, and savings over time. Use this to spot seasonal trends and monitor your savings growth.</p></div></div></div>
+  <div class="col-12"><div class="card"><div class="card-body"><h6>Candlestick Chart - Monthly Financial Flow</h6><div id="chart-candle"></div><p class="text-muted small mt-2">Displays monthly financial 'volatility'. <span class="text-success">Green</span> candles indicate a surplus, while <span class="text-danger">Red</span> candles highlight months where expenses outweighed income.</p></div></div></div>
+  <div class="col-12"><div class="card"><div class="card-body"><h6><i class="bi bi-stars me-2 text-primary"></i>Pro Mixed Trend - Income/Expense vs Savings Goal</h6><div id="chart-mixed"></div><p class="text-muted small mt-2">A comprehensive look at your financial flow vs. your savings trend. The bars show monthly volume, while the line tracks your cumulative progress.</p></div></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
+{% endblock %}

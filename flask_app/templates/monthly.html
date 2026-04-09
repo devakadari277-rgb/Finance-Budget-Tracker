@@ -1,0 +1,20 @@
+{% extends "app_base.html" %}
+{% block title %}Monthly Analysis{% endblock %}
+{% block content %}
+<h1 class="mb-4">Monthly Analysis</h1>
+<div class="mb-3 d-flex flex-wrap align-items-center gap-2">
+  <label class="form-label mb-0 text-visible">Month</label>
+  <select class="form-select d-inline-block w-auto" id="sel-month"></select>
+  <label class="form-label mb-0 text-visible">Year</label>
+  <select class="form-select d-inline-block w-auto" id="sel-year"></select>
+  <button class="btn btn-outline-danger btn-sm ms-auto" id="clear-month-btn">
+    <i class="bi bi-trash me-1"></i>Clear All Transactions
+  </button>
+</div>
+<div class="row g-3 mb-4" id="monthly-stats"></div>
+<div class="card mb-4 chart-dark"><div class="card-body"><canvas id="monthly-chart" height="120"></canvas></div></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/monthly.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,124 @@
+/*
+ * Visibility overrides - ensure every label, option, and heading is readable.
+ * Use on all main project pages so names and options are clearly visible.
+ */
+
+/* Page titles - always visible on dark background */
+.content-wrapper h1,
+.content-wrapper .page-title {
+  color: #f8fafc !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* All form labels - dark on light card background */
+.card .form-label,
+.content-wrapper .form-label {
+  color: #1e293b !important;
+  font-weight: 600;
+}
+
+/* Select dropdowns - ensure option text is dark */
+.card .form-select,
+.content-wrapper .form-select {
+  color: #1e293b;
+  background-color: #ffffff;
+}
+
+.card .form-select option,
+.content-wrapper .form-select option {
+  color: #1e293b;
+  background: #fff;
+}
+
+/* Input placeholders - visible but subtle */
+.card .form-control::placeholder,
+.content-wrapper .form-control::placeholder {
+  color: #64748b;
+}
+
+/* Card headings h5, h6 */
+.card h5,
+.card h6 {
+  color: #1e293b !important;
+  font-weight: 600;
+}
+
+/* Muted text inside cards */
+.card .text-muted,
+.card small {
+  color: #475569 !important;
+}
+
+/* Nav tab labels */
+.nav-tabs .nav-link {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+  color: #ffffff !important;
+}
+
+/* Button text */
+.btn-success,
+.btn-primary {
+  color: #fff !important;
+}
+
+.btn-outline-primary {
+  color: #0ea5e9 !important;
+}
+
+.btn-outline-primary:hover {
+  color: #0369a1 !important;
+}
+
+/* Dashboard stat labels and values */
+#dashboard-cards .card-body h6 {
+  color: #475569 !important;
+}
+
+#dashboard-cards .card-body .h4,
+#dashboard-cards .card-body .fw-bold {
+  color: #1e293b !important;
+}
+
+/* Monthly/Yearly stats rows */
+#monthly-stats .card-body,
+#yearly-stats .card-body {
+  color: #1e293b;
+}
+
+#monthly-stats .card-body *,
+#yearly-stats .card-body * {
+  color: inherit;
+}
+
+/* Graph analysis chart titles */
+#chart-pie, #chart-bar, #chart-line, #chart-candle {
+  color: #1e293b;
+}
+
+/* Targets list */
+#target-list .card,
+#target-list .card-body,
+#target-list h6,
+#target-list p {
+  color: #1e293b !important;
+}
+
+/* Reports page text */
+#report-error {
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+/* Add transaction - View Analysis sidebar */
+.card a.btn-outline-primary {
+  color: #0ea5e9 !important;
+}
+
+.card a.btn-outline-primary:hover {
+  color: #fff !important;
+}

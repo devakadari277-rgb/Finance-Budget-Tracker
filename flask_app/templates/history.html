@@ -1,0 +1,293 @@
+{% extends "app_base.html" %}
+{% block title %}Transaction History{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+  <div>
+    <h1 class="mb-1 text-white">Full Transaction History</h1>
+    <p class="text-visible mb-0">Analysis of your incomes, expenses, and savings over the years.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <select class="form-select w-auto" id="hist-year"></select>
+    <select class="form-select w-auto" id="hist-month">
+      <option value="0">All Months</option>
+      <option value="1">January</option>
+      <option value="2">February</option>
+      <option value="3">March</option>
+      <option value="4">April</option>
+      <option value="5">May</option>
+      <option value="6">June</option>
+      <option value="7">July</option>
+      <option value="8">August</option>
+      <option value="9">September</option>
+      <option value="10">October</option>
+      <option value="11">November</option>
+      <option value="12">December</option>
+    </select>
+  </div>
+</div>
+
+<div class="card shadow-lg border-0 overflow-hidden">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle" id="history-table">
+      <thead class="bg-light">
+        <tr>
+          <th>Date & Time</th>
+          <th>Type</th>
+          <th>Category/Source</th>
+          <th>Description/Notes</th>
+          <th>Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="history-body">
+      </tbody>
+    </table>
+  </div>
+  <div id="history-empty" class="p-5 text-center" style="display:none;">
+    <i class="bi bi-folder-x display-1 text-muted"></i>
+    <p class="mt-3 fs-5">No transactions found for the selected period.</p>
+  </div>
+</div>
+
+<style>
+  .type-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .badge-income { background: rgba(16, 185, 129, 0.15); color: #059669; }
+  .badge-expense { background: rgba(244, 63, 94, 0.15); color: #e11d48; }
+  .badge-saving { background: rgba(14, 165, 233, 0.15); color: #0284c7; }
+  .table-hover tbody tr:hover { background-color: rgba(14, 165, 233, 0.05); cursor: default; }
+  .amount-income { color: #059669; font-weight: 700; }
+  .amount-expense { color: #e11d48; font-weight: 700; }
+  .amount-saving { color: #0284c7; font-weight: 700; }
+</style>
+
+<!-- Edit Transaction Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Transaction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-form">
+          <input type="hidden" id="edit-id">
+          <input type="hidden" id="edit-type-val">
+          
+          <div class="mb-3">
+            <label class="form-label">Amount (₹)</label>
+            <input type="number" step="0.01" class="form-control" id="edit-amount" required>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-6">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control" id="edit-date" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Time</label>
+              <input type="time" class="form-control" id="edit-time">
+            </div>
+          </div>
+          
+          <!-- Dynamic details based on type -->
+          <div id="edit-dynamic-fields"></div>
+          
+          <button type="submit" class="btn btn-primary w-100 mt-2">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const yearSel = document.getElementById('hist-year');
+    const monthSel = document.getElementById('hist-month');
+    const tableBody = document.getElementById('history-body');
+    const emptyState = document.getElementById('history-empty');
+
+    // Populate years (current + last 4)
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= currentYear - 4; y--) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearSel.appendChild(opt);
+    }
+
+    async function loadHistory() {
+        const year = yearSel.value;
+        const month = monthSel.value;
+        const res = await fetch(`/api/history?year=${year}&month=${month}`);
+        const data = await res.json();
+
+        tableBody.innerHTML = '';
+        if (data.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+        emptyState.style.display = 'none';
+
+        data.forEach(item => {
+            const tr = document.createElement('tr');
+            let typeLabel = item.type;
+            let typeClass = `badge-${item.type}`;
+            let amountClass = `amount-${item.type}`;
+            let sign = item.type === 'income' ? '+' : (item.type === 'expense' ? '-' : '');
+            
+            let desc = item.type === 'expense' ? item.description : (item.type === 'saving' ? item.notes : (item.type === 'income' ? item.source : ''));
+
+            tr.innerHTML = `
+                <td>
+                  <span class="text-muted d-block"><i class="bi bi-calendar-event me-1"></i>${item.date}</span>
+                  ${item.time ? `<span class="small text-muted ms-3"><i class="bi bi-clock me-1"></i>${item.time}</span>` : ''}
+                </td>
+                <td><span class="type-badge ${typeClass}">${typeLabel}</span></td>
+                <td><span class="fw-semibold">${item.subtype}</span></td>
+                <td><span class="small text-muted">${desc || '-'}</span></td>
+                <td><span class="${amountClass}">${sign} ₹${parseFloat(item.amount).toLocaleString()}</span></td>
+                <td>
+                    <button class="btn btn-outline-primary btn-sm me-1 edit-btn" data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}' title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm delete-btn" data-type="${item.type}" data-id="${item.id}" title="Delete">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // Robust Event Delegation for dynamic buttons
+    tableBody.addEventListener('click', function(e) {
+        const editBtn = e.target.closest('.edit-btn');
+        const deleteBtn = e.target.closest('.delete-btn');
+        
+        if (editBtn) {
+            e.preventDefault();
+            const item = JSON.parse(editBtn.getAttribute('data-item'));
+            window.editHistoryEntry(item);
+        }
+        
+        if (deleteBtn) {
+            e.preventDefault();
+            const type = deleteBtn.getAttribute('data-type');
+            const id = deleteBtn.getAttribute('data-id');
+            window.deleteHistoryEntry(type, id);
+        }
+    });
+
+    yearSel.addEventListener('change', loadHistory);
+    monthSel.addEventListener('change', loadHistory);
+    
+    // Define delete locally attached to window
+    window.deleteHistoryEntry = function(type, id) {
+        if (!confirm('Are you sure you want to remove this entry?')) return;
+        fetch(`/api/history/delete/${type}/${id}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(d => {
+                if (d.ok) {
+                    showToast('Entry removed successfully', 'info');
+                    loadHistory();
+                }
+            });
+    };
+
+    let editModal;
+    window.editHistoryEntry = function(item) {
+        if(!editModal) {
+          editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        }
+        
+        document.getElementById('edit-id').value = item.id;
+        document.getElementById('edit-type-val').value = item.type;
+        document.getElementById('edit-amount').value = item.amount;
+        document.getElementById('edit-date').value = item.date;
+        document.getElementById('edit-time').value = item.time || '';
+        
+        const dynamicFields = document.getElementById('edit-dynamic-fields');
+        if (item.type === 'income') {
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                  <label class="form-label">Income Type</label>
+                  <input type="text" class="form-control" id="edit-subtype" value="${item.subtype}">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Source/Notes</label>
+                  <input type="text" class="form-control" id="edit-notes" value="${item.source || ''}">
+                </div>
+            `;
+        } else if (item.type === 'expense') {
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                  <label class="form-label">Expense Category</label>
+                  <input type="text" class="form-control" id="edit-subtype" value="${item.subtype}">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <input type="text" class="form-control" id="edit-notes" value="${item.description || ''}">
+                </div>
+            `;
+        } else if (item.type === 'saving') {
+            dynamicFields.innerHTML = `
+                <div class="mb-3">
+                  <label class="form-label">Notes</label>
+                  <input type="text" class="form-control" id="edit-notes" value="${item.notes || ''}">
+                </div>
+            `;
+        }
+        
+        editModal.show();
+    };
+
+    document.getElementById('edit-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-id').value;
+        const type = document.getElementById('edit-type-val').value;
+        
+        const payload = {
+            amount: parseFloat(document.getElementById('edit-amount').value),
+            date: document.getElementById('edit-date').value,
+            time: document.getElementById('edit-time').value
+        };
+        
+        if (type === 'income') {
+            payload.type = document.getElementById('edit-subtype').value;
+            payload.source = document.getElementById('edit-notes').value;
+        } else if (type === 'expense') {
+            payload.category = document.getElementById('edit-subtype').value;
+            payload.description = document.getElementById('edit-notes').value;
+        } else if (type === 'saving') {
+            payload.notes = document.getElementById('edit-notes').value;
+        }
+        
+        fetch(`/api/edit/${type}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) {
+                editModal.hide();
+                showToast('Transaction updated successfully', 'success');
+                loadHistory();
+            } else {
+                showToast(d.error || 'Failed to update', 'danger');
+            }
+        });
+    });
+
+    loadHistory();
+});
+</script>
+{% endblock %}

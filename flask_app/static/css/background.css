@@ -1,0 +1,50 @@
+/* Full-screen interactive background image */
+.bg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.bg-image {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background-image: url('../images/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.55) 0%, rgba(10, 20, 40, 0.6) 100%);
+  z-index: -1;
+}
+
+/* Auth pages - lighter overlay so background image shows through */
+body.auth-body .bg-overlay {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.18) 0%, rgba(10, 20, 40, 0.28) 100%);
+}
+
+/* Ensure content stays above */
+.app-layout, .auth-page, .content-wrapper, .sidebar, .main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Main project - lighter overlay so background shows through */
+body:not(.auth-body) .bg-overlay {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.35) 0%, rgba(10, 20, 40, 0.45) 100%);
+}

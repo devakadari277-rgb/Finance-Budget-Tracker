@@ -1,0 +1,53 @@
+{% extends "app_base.html" %}
+{% block title %}Calculator{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div>
+    <h1 class="mb-1 text-white">Calculator</h1>
+    <p class="text-visible mb-0">Standard financial calculator for quick operations.</p>
+  </div>
+  <button type="button" class="btn btn-outline-primary" id="calc-clear-history">Clear</button>
+</div>
+
+<div class="row justify-content-center mt-4">
+  <div class="col-12 col-md-8 col-lg-5">
+    <div class="card p-4">
+      <div class="calculator calculator-standalone" aria-label="Calculator">
+        <div class="calculator-display">
+          <div class="calculator-mini" id="calc-mini"></div>
+          <input class="calculator-input" id="calc-display" value="0" readonly>
+        </div>
+        <div class="calculator-grid mt-3">
+          <button class="calc-btn calc-fn" data-action="ac">AC</button>
+          <button class="calc-btn calc-fn" data-action="del">DEL</button>
+          <button class="calc-btn calc-fn" data-action="percent">%</button>
+          <button class="calc-btn calc-op" data-op="/">÷</button>
+
+          <button class="calc-btn" data-num="7">7</button>
+          <button class="calc-btn" data-num="8">8</button>
+          <button class="calc-btn" data-num="9">9</button>
+          <button class="calc-btn calc-op" data-op="*">×</button>
+
+          <button class="calc-btn" data-num="4">4</button>
+          <button class="calc-btn" data-num="5">5</button>
+          <button class="calc-btn" data-num="6">6</button>
+          <button class="calc-btn calc-op" data-op="-">−</button>
+
+          <button class="calc-btn" data-num="1">1</button>
+          <button class="calc-btn" data-num="2">2</button>
+          <button class="calc-btn" data-num="3">3</button>
+          <button class="calc-btn calc-op" data-op="+">+</button>
+
+          <button class="calc-btn calc-fn" data-action="sign">±</button>
+          <button class="calc-btn" data-num="0">0</button>
+          <button class="calc-btn" data-action="dot">.</button>
+          <button class="calc-btn calc-eq" data-action="eq">=</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/calculator.js') }}"></script>
+{% endblock %}

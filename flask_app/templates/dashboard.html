@@ -1,0 +1,110 @@
+{% extends "app_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-header mb-4">
+  <div>
+    <h1 class="mb-1">
+      <img src="{{ url_for('static', filename='images/money_emoji.png') }}" alt="Emoji" class="premium-emoji">
+      Dashboard
+    </h1>
+    <p class="text-visible mb-0">Overview of your finances for this month: income, expense, savings and savings rate.
+    </p>
+  </div>
+  <div class="profile-premium-section">
+    <div class="avatar-container">
+      <div class="avatar-frame rounded-circle" id="user-avatar">
+        <img id="avatar-img" alt="Profile" class="avatar-img" style="display:none;">
+        <div id="avatar-fallback" class="avatar-fallback"><i class="bi bi-person-fill"></i></div>
+        <div class="avatar-overlay"><i class="bi bi-camera-fill"></i></div>
+      </div>
+      <input type="file" id="avatar-file" accept="image/*" style="display:none">
+    </div>
+    <div class="avatar-details ms-3">
+      <h3 class="h5 mb-1 text-white" id="profile-name">User Name</h3>
+      <p class="small text-visible mb-2" id="profile-email">email@example.com</p>
+      <div class="d-flex gap-3">
+        <button class="btn btn-xxs btn-outline-light" id="avatar-upload-btn"
+          style="padding: 2px 6px; font-size: 0.7rem;">Change</button>
+        <button class="btn btn-xxs btn-outline-danger" id="avatar-remove-btn"
+          style="padding: 2px 6px; font-size: 0.7rem;"><i class="bi bi-trash"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4" id="dashboard-cards">
+  <div class="col-md-3">
+    <div class="card card-stat-1">
+      <div class="card-body">
+        <h6 class="text-muted">Total Income</h6>
+        <p class="h4 fw-bold" id="card-income">₹0</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat-2">
+      <div class="card-body">
+        <h6 class="text-muted">Total Expense</h6>
+        <p class="h4 fw-bold" id="card-expense">₹0</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat-3">
+      <div class="card-body">
+        <h6 class="text-muted">Total Savings</h6>
+        <p class="h4 fw-bold" id="card-savings">₹0</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-stat-4">
+      <div class="card-body">
+        <h6 class="text-muted">Savings Rate</h6>
+        <p class="h4 fw-bold" id="card-rate">0%</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-3">
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h5 class="mb-3 text-dark">Smart Savings Snapshot</h5>
+      <p class="text-muted small mb-3">System-calculated savings based on your income and expenses.</p>
+      <div class="row g-3" id="savings-summary">
+        <div class="col-6">
+          <div class="border rounded-3 p-2">
+            <small class="text-muted d-block">This Month</small>
+            <span class="fw-bold" id="sav-this-month">₹0</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="border rounded-3 p-2">
+            <small class="text-muted d-block">Last Month</small>
+            <span class="fw-bold" id="sav-last-month">₹0</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="border rounded-3 p-2">
+            <small class="text-muted d-block">This Year</small>
+            <span class="fw-bold" id="sav-this-year">₹0</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="border rounded-3 p-2">
+            <small class="text-muted d-block">Last Year</small>
+            <span class="fw-bold" id="sav-last-year">₹0</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-muted small mt-2 mb-1" id="sav-note">Savings = Income − Expense + Logged Savings.</p>
+      <p class="small mb-0" id="sav-change-text"></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
