@@ -11,7 +11,8 @@ nltk
 spacy
 textblob
 requests
-beautifulsoup4
+beautifulsoup4>=4.12.0
+soupsieve>=2.5.0
 selenium
 xgboost
 lightgbm

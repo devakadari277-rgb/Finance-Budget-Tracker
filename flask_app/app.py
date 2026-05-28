@@ -7,8 +7,8 @@ import random
 from datetime import date, datetime, timedelta
 from collections import defaultdict
 from functools import wraps
+from sklearn.linear_model import LinearRegression
 
-# Flask and Web
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, Response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,7 +17,6 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
-# Data Science and Visualization
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -51,7 +50,11 @@ import seaborn as sns
 # from textblob import TextBlob
 
 # Local Modules
-import pdf_report
+try:
+    import pdf_report
+except ModuleNotFoundError:
+    from . import pdf_report
+
 from helpers import (
     get_month_start_end,
     required_monthly_saving,
@@ -219,9 +222,6 @@ def index():
     return redirect(url_for('register'))
 
 
-# ---------------------------------------------------------------------------
-# Main project pages - all require login
-# ---------------------------------------------------------------------------
 
 @app.route('/dashboard')
 @login_required
@@ -277,10 +277,6 @@ def get_user_id():
     """Return current user id from session or 0."""
     return session.get('user_id', 0)
 
-
-# ---------------------------------------------------------------------------
-# API endpoints - all require login, return JSON (or PDF for report)
-# ---------------------------------------------------------------------------
 
 @app.route('/api/dashboard')
 @login_required
