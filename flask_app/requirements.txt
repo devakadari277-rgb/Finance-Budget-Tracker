@@ -16,3 +16,5 @@ soupsieve>=2.5.0
 selenium
 xgboost
 lightgbm
+
+gunicorn==23.0.0
